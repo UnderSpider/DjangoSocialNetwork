@@ -1,0 +1,131 @@
+{#login/templates/login/index.html#}
+{% extends 'login/base.html' %}
+{% block title %}评论页面{% endblock %}
+{% block content %}
+    {% if request.session.is_login %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评论</title>
+   <style>
+    .like{width:20px;   
+         height:20px;   
+         background: url(/static/images/dianzan2.png) no-repeat center;}
+    .cs{width:20px;   
+        height:20px;   
+        color:#f00;background: url(/static/images/dianzan1.png) no-repeat center;
+    </style>
+    <script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        $(function () {            
+            $(".like").click(function () {
+                $(this).className('cs')     
+            })
+        })
+        $(function () { 
+            $(".cs").click(function () {
+                $(this).className('like')                
+            })
+        })
+    </script>
+    <link rel="stylesheet" href="/static/css/bootstrap-gallery-0413916ff6.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-777eb1177c.min.css">
+    <link rel="stylesheet" href="/static/css/style-c8e711e423.css">
+</head>
+<body>
+    <div class="container " id="gallery-modal">
+        <div class="img-container ">
+            <div class="article ">
+                <div class="caption-header">
+
+                    <img width="50px" src="/static/images/CON.png" class="img-circle avatar">
+                    <a>{{ imgs.name }}</a>
+                </div>
+                <div class="imgwrapper ">
+
+                    <img class="" src="/media/{{ imgs.img_url }}">
+
+
+                </div>
+                <div class="caption" style="display: inline-block; ">
+
+                <!-- 今天天气真好！！！ -->
+
+                </div>
+            </div>
+        </div>
+        
+            <form action="/add/" method="get" style="padding-left:235px;">
+                <input type="hidden" name='username' value={{ imgs.name }}>
+                <input type="hidden" name='usrid' value={{ imgs.id }}>
+                <input type="hidden" name="a" value={{request.session.user_name}}>
+                <input class={{ clas }} style="border: none;font-size:18px;cursor:pointer; text-align: center;" type="button" id='dianzan'
+                >
+                &nbsp;
+                <!-- <button id="dianzan"><img src="/static/images/dianzan1.png" alt=""></button> -->
+                <span id='result'>{{number}}</span>
+            </form>
+        
+        <div class="comment">
+            {% if c %}
+            <ul class="list-group">
+                {% for comment in c %}
+                <li class="comment-item">
+                    <a class="comment-avatar">
+                        <img width="45px" src="/static/images/CON.png" class="img-circle avatar">
+                    </a>
+                    <div class="comment-txt">
+                        <a> {{ comment.name }} </a>
+                        <time>{{ comment.dataTime }}</time>
+                        <p> {{ comment.text }}</p>
+                    </div>
+                    <hr/>    
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No comments are available.</p>
+            {% endif %}
+            <form action="text" method="get">
+                <input type="hidden" name="userid" value={{imgs.id}}>
+                <input type="hidden" name="a" value={{request.session.user_name}}>
+                <input type="hidden" name="username"  value={{imgs.name}}>
+                <div style="float:left;">
+                    <textarea name="comment_text" id="text" style="height: 50px;width: 300px;resize: none;" maxlength="150"></textarea>
+                </div>
+                <div style="float:left;">
+                    <input type="submit" id="comment" name="submit" value="评论" style="height: 50px;width: 50px;">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/jquery-3.2.1.js"></script>
+<script>
+    $(document).ready(function(){
+      $("#dianzan").click(function(){
+        var a ;
+        var usrid;
+        $.get("/add/",{'a':'{{ request.session.user_name }}',
+            'usrid':'{{ imgs.id }}'}, function(ret){
+            $('#result').html(ret);
+        })
+      });
+      $("#comment").click(function(){
+        var texts = $("#text").val();
+        var name;
+        var userid;
+        $.get("/text/",
+            {'texts':texts ,'name':'{{ request.session.user_name }}','usrid':'{{ imgs.id }}'}, 
+        function(ret){$('#comments').html(ret);
+        })
+      });
+    });
+</script>
+</body>
+</html>
+
+{% endif %}
+{% endblock %}

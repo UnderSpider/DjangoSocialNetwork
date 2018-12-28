@@ -1,0 +1,94 @@
+{#login/templates/login/index.html#}
+{% extends 'login/base.html' %}
+{% block title %}主页{% endblock %}
+{% block content %}
+    {% if request.session.is_login %}
+    <div style="height: 70px">
+        <h3 style="float: left;padding-left: 100px;" >你好,{{ request.session.user_name }}！</h3>
+        <form class='form-index' action="/index/" method="post" enctype="multipart/form-data" style="float: right">
+        {% csrf_token %}
+        <input type="hidden" name='a' value={{ request.session.user_name }}>
+        <input type="file" name="img">
+        <input type="submit" value="上传">
+        </form>
+    </div>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!-- {% load staticfiles %} -->
+    <link REL="SHORTCUT ICON" HREF="{% static "images/qqq.ico" %}"/>
+    <style>
+    
+        box{
+            float: left;
+            display: inline;
+            margin: 20px 5px;
+            padding-left: 100px;
+            /*padding-right: 10px;*/
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+<table align="center">
+{% for i in imgs %}
+
+<box>
+    <span style="float: left; color: orange;">{{i.name}}</span> <span style="float: right;">{{i.dataTime}}</span>
+<form action="/comment/" method="get" id='uu'>
+    <input type="hidden" name='username' value={{ i.name }}>
+    <input type="hidden" name='userid' value={{ i.id }}>
+    <input type="hidden" name='a' value={{ request.session.user_name }}>
+    <input type="image" name="submit" src="/media/{{i.img_url}}" alt="Submit" style="height: 360px;width: 380px;">
+</form>
+<img src="/static/images/dia.png" alt="" style="width: 20px;height: 20px;"> {{i.dianzans}} likes &nbsp &nbsp <img src="/static/images/ping.png" alt="" style="width: 20px;height: 20px;"> &nbsp {{i.comments}}
+</box>
+{% endfor %}
+</table>
+</body>
+</html>
+    {% else %}
+    <h3 style="padding-left: 100px;">你尚未登录，只能访问公开内容！</h3>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!-- {% load staticfiles %} -->
+    <link REL="SHORTCUT ICON" HREF="{% static "images/qqq.ico" %}"/>
+    <style>
+    
+        box{
+            float: left;
+            display: inline;
+            margin: 20px 5px;
+            padding-left: 100px;
+            /*padding-right: 10px;*/
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+<table align="center">
+{% for i in imgs %}
+
+<box>
+    <span style="float: left; color: orange;">{{i.name}}</span> <span style="float: right;">{{i.dataTime}}</span>
+<p><img src="/media/{{i.img_url}}" alt="" style="height: 360px;width: 380px;"></p>
+<img src="/static/images/dia.png" alt="" style="width: 20px;height: 20px;"> {{i.dianzans}} likes &nbsp &nbsp <img src="/static/images/ping.png" alt="" style="width: 20px;height: 20px;"> &nbsp {{i.comments}}
+</box>
+{% endfor %}
+</table>
+</body>
+</html>
+
+    {% endif %}
+
+{% endblock %}
+
+
+
+
+

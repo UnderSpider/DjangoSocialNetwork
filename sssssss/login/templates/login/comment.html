@@ -1,0 +1,124 @@
+{#login/templates/login/index.html#}
+{% extends 'login/base.html' %}
+{% block title %}评论页面{% endblock %}
+{% block content %}
+    {% if request.session.is_login %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+     <style>
+    .like{background: white;}
+    .cs{color:#f00;background: white;}
+        
+    html,body,table{
+            margin:0;
+            height:100%;
+        }
+    table{
+            width:100%;
+        }
+    #box{
+            float: right;
+            width:600px;
+            height:600px;
+            margin:auto;
+        }
+    .qwer{
+    
+
+
+    }
+    a:hover{
+        text-decoration: none;
+    }
+    </style>
+    <script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        $(function () {            
+            $(".like").click(function () {
+                $(this).toggleClass('cs');                
+            })
+        })
+        $(function () { 
+            $(".cs").click(function () {
+                $(this).toggleClass('cs');                
+            })
+        })
+    </script>
+</head>
+<body>
+<table>
+        <tr style="height: 800px;padding-top: 200px;">
+            <td>
+                <div id="box">
+
+<p><img src="/static/images/CON.png" alt="" style="width: 60px;height: 60px;"> <b style="font-size: 20px;padding: 20px; color: blue;"><a href="" style="text-decoration: none;">{{imgs.name}}</a></b></p>
+<img src="/media/{{imgs.img_url}}" alt="" style="width: 600px;height: 400px;">
+
+<form action="/add/" method="get" style="padding-left:235px;">
+    <input type="hidden" name='username' value={{ imgs.name }}>
+    <input type="hidden" name='usrid' value={{ imgs.id }}>
+    <button class={{clas}} style="background: white; border: none;font-size:20px;cursor:pointer; text-align: center;" type="button" id='dianzan'>&#10084;</button>
+    &nbsp<span id='result'>{{number}}</span>
+    
+</form>
+     
+<form action="text" method="get">
+    评论
+    <input type="text" id="text" style="width: 500px;">
+    <input type="hidden" name='username' value={{ imgs.name }}>
+    <input type="hidden" name='userid' value={{ imgs.id }}>
+    <input type="hidden" name='a' value={{ request.session.user_name }}>
+    <button type="Submit" id="comment">发表</button>
+</form>
+</div>
+            </td>
+            <td style="padding-left: 30px;">
+    <div class="qwer">
+        {% if c %}
+                
+    {% for i in c %}
+    <p style="width: 600px;">
+    <img src="/static/images/CON.png" alt="" style="width: 24px;height: 28px;"><span>{{i.name}} &nbsp; &nbsp; {{i.dataTime}} </span></p >
+    <p style="padding-left: 24px;">{{i.text}}</p>
+    {% endfor %}
+    {% else %}
+    <p style="width: 600px;">还没有评论哟~~~</p>
+    <p></p>
+    {% endif %}
+    </div>
+            </td>
+        </tr>
+    </table>
+<script src="/static/js/jquery-3.2.1.js"></script>
+<script>
+    $(document).ready(function(){
+      $("#dianzan").click(function(){
+        var a ;
+        var usrid;
+        $.get("/add/",{'a':'{{ request.session.user_name }}',
+            'usrid':'{{ imgs.id }}'}, function(ret){
+            $('#result').html(ret);
+        })
+      });
+      $("#comment").click(function(){
+        var texts = $("#text").val();
+        var name;
+        var userid;
+        $.get("/text/",
+            {'texts':texts ,'name':'{{ request.session.user_name }}','usrid':'{{ imgs.id }}'}, 
+        function(ret){$('#comments').html(ret);
+        })
+      });
+    });
+</script>
+    
+</body>
+</html>
+
+
+
+{% endif %}
+{% endblock %}
